@@ -28,7 +28,7 @@ df1=scaler.fit_transform(np.array(sine).reshape(-1,1))
 print("df1.shape is  ", df1.shape)
 
 
-# preparing independent and dependent features
+
 def prepare_data(timeseries_data, n_features):
 	X, y =[],[]
 	for i in range(len(timeseries_data)):
@@ -43,30 +43,26 @@ def prepare_data(timeseries_data, n_features):
 		y.append(seq_y)
 	return np.array(X), np.array(y)
 
-# define input sequence
-timeseries_data = df1
-# choose a number of time steps
-n_steps = 150
-# split into samples
-X, y = prepare_data(timeseries_data, n_steps)
 
-# taking last n no of time series
+timeseries_data = df1
+n_steps = 150
+X, y = prepare_data(timeseries_data, n_steps)
 pred_set = np.linspace(0, n_steps+1, n_steps+1)
 for i in range(0,n_steps+1):
   j = len(timeseries_data)-1 - i
   k = len(pred_set)-1 - i 
   pred_set [k] = timeseries_data[j]
-#pred_set
+
 
 print("X shape and y shape is\n")
 print(X.shape),print(y.shape)
 
-# reshape from [samples, timesteps] into [samples, timesteps, features]
+
 n_features = 1
 X = X.reshape((X.shape[0], X.shape[1], n_features))
 X.shape
 
-# define model
+
 model = keras.Sequential()
 model.add(LSTM(100, activation='relu', return_sequences=True, input_shape=(n_steps, n_features)))
 model.add(LSTM(80, activation='relu', return_sequences=True,))
@@ -75,10 +71,8 @@ model.add(LSTM(50, activation='relu', return_sequences=True,))
 model.add(LSTM(30, activation='relu', ))
 model.add(Dense(1))
 model.compile(optimizer='adam', loss='mae')
-# fit model
-history = model.fit(X, y, epochs=50, verbose=1)
 
-# demonstrate prediction for next 10 days
+history = model.fit(X, y, epochs=50, verbose=1)
 
 x_input = pred_set
 temp_input=list(x_input)
